@@ -1,3 +1,4 @@
 *.db3
 sp-api-keys.json
 ordersData/*.py
+__pycache__

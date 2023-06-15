@@ -133,7 +133,7 @@ timestart = int(time.time())
 # 'utcfromtimestamp' gives GMT, 'fromtimestamp' gives BST
 timestartFmt = datetime.utcfromtimestamp(timestart).strftime('%Y-%m-%d %H:%M:%S')
 
-pprint(timestartFmt)
+# pprint(timestartFmt)
 # sys.exit()
 
 
@@ -298,6 +298,7 @@ else:
 timefinish = int(time.time())
 
 totalOrders = len(allOrders)
+totalOrderItems = len(allOrderItems)
 
 # print('Total Orders:', totalOrders)
 # print('Total Items:', len(allOrderItems))
@@ -317,7 +318,7 @@ totalOrdersMinusMissing = totalOrders - incompleteOrders
 
 pprint({'Missing Orders in OrderItems': missingOrderIdsDict})
 
-pprint(missingVarsOrderIds)
+pprint({'Missing variations in lookup table': missingVarsOrderIds})
 
 pprint(allOrders)
 pprint(allOrderItems)
@@ -387,4 +388,5 @@ api_orders_conn.close()
 
 timeend = int(time.time())
 timeendFmt = datetime.utcfromtimestamp(timeend).strftime('%Y-%m-%d %H:%M:%S')
-pprint(timeendFmt)
+
+print(f'\n-------------------------------\nTime Start: {timestartFmt}\nTime End:   {timeendFmt}\nTotal Orders:     {totalOrders}\nTotal OrderItems: {totalOrderItems}')
