@@ -1,0 +1,7 @@
+{
+    "/* COMMENT */": "If 'db_path_mock' value is left empty the 'db_path' value will be used.",
+    
+    "db_path_mock": "sqlite/",
+    "db_path": "/mnt/deepthought/FESP-REFACTOR/FespMVC/NEW_API_SYSTEM/sp_api/",
+    "sku_info_path": "/mnt/deepthought/FESP-REFACTOR/FespMVC/NEW_API_SYSTEM/amazon_mws/"
+}
