@@ -12,12 +12,10 @@ cron job:
 
 24 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 120 90
 
-0 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 120 90
-2 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 90 60
-4 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 60 30
+0 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 114 84
+2 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 86 56
+4 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 58 28
 6 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 30 2
-
-
 
 
 0 * * * * /usr/bin/python3 /opt/lampp/htdocs/sp_api_local/amazon_sp_api_get_orders.py 120 90
