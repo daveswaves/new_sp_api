@@ -10,6 +10,22 @@ cron job:
 5 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 30 2 mock=ordersData60
 
 
+24 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 120 90
+
+0 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 120 90
+2 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 90 60
+4 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 60 30
+6 * * * * /usr/bin/python3 /var/www/html/sp_api/amazon_sp_api_get_orders.py 30 2
+
+
+
+
+0 * * * * /usr/bin/python3 /opt/lampp/htdocs/sp_api_local/amazon_sp_api_get_orders.py 120 90
+2 * * * * /usr/bin/python3 /opt/lampp/htdocs/sp_api_local/amazon_sp_api_get_orders.py 90 60
+4 * * * * /usr/bin/python3 /opt/lampp/htdocs/sp_api_local/amazon_sp_api_get_orders.py 60 30
+6 * * * * /usr/bin/python3 /opt/lampp/htdocs/sp_api_local/amazon_sp_api_get_orders.py 30 2
+
+
 https://sp-api-docs.saleweaver.com/quickstart/
 https://sp-api-docs.saleweaver.com/pii/
 https://www.youtube.com/watch?v=m5T2YQLLyaw&list=PL4844XPLxWVWVkufGjqmsXpn32qAngxLd
@@ -29,25 +45,44 @@ from sp_api.api import Orders
 from sp_api.util import throttle_retry, load_all_pages
 from pprint import pprint
 
-server_path = os.path.abspath(__file__)
-server_path = server_path.replace(sys.argv[0], '')
+# scriptname = sys.argv[0]
+# server_path = os.path.abspath(scriptname)
+# server_path = server_path.replace(scriptname, '')
+
+# server_path = sys.argv[0]
+# server_path = server_path.replace('amazon_sp_api_get_orders.py', '')
+
+scriptname = 'amazon_sp_api_get_orders.py'
+
+if sys.argv[0].startswith("/"):
+    server_path = sys.argv[0].replace(scriptname, '')
+else:
+    server_path = os.path.abspath(sys.argv[0])
+    server_path = server_path.replace(scriptname, '')
+
+# pprint(server_path)
+# sys.exit()
 
 sp_api_keys = json.load(open(server_path + 'json/sp-api-keys.json', 'r'))
-db_paths = json.load(open(server_path + 'json/db_paths.json', 'r'))
+paths_config = json.load(open(server_path + 'json/paths_config.json', 'r'))
+
+
 
 # Ternary operator: x = a if True else b
-db_path = db_paths['db_path'] if '' == db_paths['db_path_mock'] else server_path + db_paths['db_path_mock']
+db_path = paths_config['db_path'] if '' == paths_config['mock_path'] else server_path + paths_config['mock_path']
 
-'''
-pprint()
-sys.exit()
-'''
+# f = open("/var/www/html/sp_api/debug.txt", "a")
+# f.write('TEST\n')
+# f.close()
+# sys.exit()
 
 #==============================
 # Use dummy data for debugging.
 #==============================
 mock = False
-if 4 == len(sys.argv) and 'mock=' == sys.argv[3][:5]:
+if 4 == len(sys.argv) and 'mock' == sys.argv[3]:
+# if 4 == len(sys.argv) and 'mock' == sys.argv[3][:4]:
+    '''
     sys.path.insert(1, server_path + '/ordersData')
     
     # from sys.argv[3][5:] import allOrders, allOrderItems
@@ -55,11 +90,16 @@ if 4 == len(sys.argv) and 'mock=' == sys.argv[3][:5]:
     module = importlib.import_module(module_name)
     allOrders = module.allOrders
     allOrderItems = module.allOrderItems
+    '''
+    # from sys.argv[3][5:] import allOrders, allOrderItems
     
+    mock = json.load(open(server_path + 'ordersData/mock.json', 'r'))
+    allOrders = mock['allOrders']
+    allOrderItems = mock['allOrderItems']
+    
+    # pprint(mock['allOrderItems'])    
     mock = True
-
-# pprint(mock)
-
+    
 # pprint(allOrders)
 # pprint(allOrderItems)
 # sys.exit()
@@ -78,9 +118,7 @@ client_config = dict(
 @throttle_retry()
 @load_all_pages()
 def load_all_orders(**kwargs):
-    """
-    a generator function to return all pages, obtained by NextToken
-    """
+    # a generator function to return all pages, obtained by NextToken
     return Orders(credentials=client_config, marketplace=Marketplaces.UK).get_orders(**kwargs)
 
 
@@ -105,7 +143,7 @@ sys.exit()
 
 # To date, we haven't managed to find how to retrieve order variations from the new Sp API,
 # so this is required to lookup the variation for any given SKU.
-sku_asin_vars_conn = sqlite3.connect(db_paths['sku_info_path'] + 'sku_info.db3')
+sku_asin_vars_conn = sqlite3.connect(paths_config['sku_info_path'] + 'sku_info.db3')
 # sku_asin_vars_conn = sqlite3.connect('/mnt/deepthought/FESP-REFACTOR/FespMVC/NEW_API_SYSTEM/amazon_mws/sku_info.db3')
 sku_asin_vars_cur = sku_asin_vars_conn.cursor()
 
@@ -128,12 +166,12 @@ sku_asin_vars_conn.close()
 # sys.exit()
 
 
-timestart = int(time.time())
+timeStart = int(time.time())
 
 # 'utcfromtimestamp' gives GMT, 'fromtimestamp' gives BST
-timestartFmt = datetime.utcfromtimestamp(timestart).strftime('%Y-%m-%d %H:%M:%S')
+timeStartFmt = datetime.utcfromtimestamp(timeStart).strftime('%Y-%m-%d %H:%M:%S')
 
-# pprint(timestartFmt)
+# pprint(timeStartFmt)
 # sys.exit()
 
 
@@ -252,7 +290,6 @@ else:
 
     # Get order items
     allOrderItems = []
-    # missingVarsOrderIds = {}
     burstItems = 30
     for row in allOrders:
         orderId = row['orderId']
@@ -295,6 +332,8 @@ else:
             burstItems = burstItems-1
 
 
+
+
 timefinish = int(time.time())
 
 totalOrders = len(allOrders)
@@ -320,8 +359,8 @@ pprint({'Missing Orders in OrderItems': missingOrderIdsDict})
 
 pprint({'Missing variations in lookup table': missingVarsOrderIds})
 
-pprint(allOrders)
-pprint(allOrderItems)
+# pprint(allOrders)
+# pprint(allOrderItems)
 
 # Delete existing table data for debugging
 # ########################################
@@ -347,9 +386,10 @@ TODO: Add code for any error data to be inserted into 'request_errors' / 'invali
 '''
 
 
+
 # Record orderIDs that don't exist in allOrderItems
 for orderId in missingOrderIds:
-    api_orders_cur.execute("INSERT INTO missing_orderIds (platform,orderId,timestamp) VALUES (?,?,?)", ('amazon',orderId,timestart))
+    api_orders_cur.execute("INSERT INTO missing_orderIds (platform,orderId,timestamp) VALUES (?,?,?)", ('amazon',orderId,timeStart))
 
 for row in allOrders:
     # Don't add order to 'amazon_orders' if it doesn't exist in amazon_items
@@ -362,14 +402,14 @@ for row in allOrders:
             api_orders_cur.execute("INSERT INTO queue_orderIds (platform,orderId) VALUES (?,?)", ('amazon',row['orderId']))
         
             # Insert records into 'save_queue_records' table
-            api_orders_cur.execute("INSERT INTO save_queue_records (platform,orderId,timestamp) VALUES (?,?,?)", ('amazon',row['orderId'],timestart))
+            api_orders_cur.execute("INSERT INTO save_queue_records (platform,orderId,timestamp) VALUES (?,?,?)", ('amazon',row['orderId'],timeStart))
 
 
 # Insert records into 'stats' table
-api_orders_cur.execute("INSERT INTO stats (platform,time_start,time_finish,total,incomplete_orders) VALUES (?,?,?,?,?)", ('amazon',timestart,timefinish,totalOrdersMinusMissing,incompleteOrders))
+api_orders_cur.execute("INSERT INTO stats (platform,time_start,time_finish,total,incomplete_orders) VALUES (?,?,?,?,?)", ('amazon',timeStart,timefinish,totalOrdersMinusMissing,incompleteOrders))
 # Insert record into 'last_request_timestamp' table
-api_orders_cur.execute("UPDATE `last_request_timestamp` SET `platform` = ?, `time_start` = ?, `time_finish` = ?", ('amazon',timestart,timefinish))
-# api_orders_cur.execute("INSERT INTO last_request_timestamp (platform,time_start,time_finish) VALUES (?,?,?)", ('amazon',timestart,timefinish))
+api_orders_cur.execute("UPDATE `last_request_timestamp` SET `platform` = ?, `time_start` = ?, `time_finish` = ?", ('amazon',timeStart,timefinish))
+# api_orders_cur.execute("INSERT INTO last_request_timestamp (platform,time_start,time_finish) VALUES (?,?,?)", ('amazon',timeStart,timefinish))
 
 for row in allOrderItems:
     # Insert records into 'amazon_items' table
@@ -377,7 +417,11 @@ for row in allOrderItems:
 
 for sku in missing_sku_asin_vars:
     # Insert records into 'missing_sku_asin_vars' table
-    api_orders_cur.execute("INSERT INTO missing_sku_asin_vars (sku,timestamp) VALUES (?,?)", (sku,timestart))
+    api_orders_cur.execute("INSERT INTO missing_sku_asin_vars (sku,timestamp) VALUES (?,?)", (sku,timeStart))
+
+# Insert missingVarsOrderIds items into 'missing_sku_asin_vars'
+totalMissingSkuVars = len(missing_sku_asin_vars)
+
 
 
 api_orders_conn.commit()
@@ -386,7 +430,16 @@ api_orders_conn.close()
 
 # pprint(datetime.now())
 
-timeend = int(time.time())
-timeendFmt = datetime.utcfromtimestamp(timeend).strftime('%Y-%m-%d %H:%M:%S')
+timeEnd = int(time.time())
+timeEndFmt = datetime.utcfromtimestamp(timeEnd).strftime('%Y-%m-%d %H:%M:%S')
 
-print(f'\n-------------------------------\nTime Start: {timestartFmt}\nTime End:   {timeendFmt}\nTotal Orders:     {totalOrders}\nTotal OrderItems: {totalOrderItems}')
+stats = f'|Total Orders: {totalOrders}|Total OrderItems: {totalOrderItems}|Total Missing Vars: {totalMissingSkuVars}\n'
+
+resultsTimestamp = f'Time Start: {timeStart}|Time End: {timeEnd}{stats}'
+resultsDateTime = f'Time Start: {timeStartFmt}|Time End: {timeEndFmt}{stats}'
+
+f = open(server_path + 'debug.txt', "a")
+f.write(resultsTimestamp)
+f.close()
+
+print(resultsDateTime)
