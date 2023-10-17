@@ -8,7 +8,7 @@
 
 ## General Notes
 
-The Amazon APIs that pull orders and create Prime labels are coded in Python and use the `python-amazon-sp-api` package. They are located on the Ubuntu 20.04.3 LTS server (192.168.0.125).
+The Amazon APIs that pull orders and create Prime labels are coded in Python and use the `python-amazon-sp-api` package (pip install python-amazon-sp-api). They are located on the Ubuntu 20.04.3 LTS server (192.168.0.125).
 
 `/var/www/html/sp_api/amazon_sp_api_get_orders.py` runs at 40 mins past the hour, and saves the orders to `FespMVC/NEW_API_SYSTEM/sp_api/api_orders.db3`. This is not the `api_orders.db3` database that the other platform APIs write to `FespMVC/NEW_API_SYSTEM/api_orders.db3`. Originally, it was set-up to use the same database, but writing to the database from different servers resulted in the database records becoming corrupt.
 
@@ -40,3 +40,17 @@ If the total records in 'prime_labels' equals/exceeds 6000, it deletes the oldes
 
 ## amazon_sp_api_get_orders.py
 
+The `sp_api` access details are retrieved from `json/sp-api-keys.json`.
+
+The `Orders()` sp_api.api method is used, in conjunction with the throttle_retry
+and load_all_pages utilities, to retrieve order and items data.
+
+The following tables in `sp_api/api_orders.db3` get updated:
+```
+amazon_orders
+amazon_items
+last_request_timestamp
+missing_orderIds
+missing_sku_info
+stats
+```
