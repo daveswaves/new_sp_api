@@ -12,5 +12,15 @@ At 55 mins past the hour `/var/www/html/sp_api/get_amazon_label_NEW.py` runs. Th
 
 The crontab schedules can be viewed by SSHing into 'vova@192.168.0.125' and running `crontab -l`. Alternatively, `crontab -e` to edit schedules.
 
-### get_amazon_label_NEW.py
+## get_amazon_label_NEW.py
 
+The `sp_api` access details are retrieved from `json/sp-api-keys.json`.
+
+### Calculate Prime labels
+Get list of 'isprime' orders (that have the most recent 'timestamp') with 'NextDay' or 'SecondDay' service from `amazon_orders` table (`FespMVC/NEW_API_SYSTEM/sp_api/api_orders.db3`). Use orderIds from this list to retrieve the following fields from `amazon_items`:
+```
+orderId
+orderitemId
+sku
+qty
+```
