@@ -2,7 +2,7 @@
 
 #contents
 * [General Notes](#general-notes)
-* [get_amazon_label_NEW.py](#get_amazon_label_NEW.py)
+* [get_amazon_label_NEW.py](#get_amazon_label_newpy)
 * [amazon_sp_api_get_orders.py](#amazon_sp_api_get_orders.py)
 
 
