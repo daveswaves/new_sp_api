@@ -33,7 +33,9 @@ qty
 
 Get weights & lengths, from `FespMVC/NEW_API_SYSTEM/sp_api/products.db3`, for skus retrieved from `amazon_items`. This `products.db3` database is copied from `FESP-REFACTOR/products.db3` (7pm scheduled copy). A copy is used to avoid the access problems that this Python script was experiencing when trying to access the original database.
 
-After calculating the total dimensions and weight of the shipment, the shipment is created and the order PNG string retrieved. This gets saved, along with the ordeID, to `FespMVC/NEW_API_SYSTEM/sp_api/api_labels.db3`.
+After calculating the total dimensions and weight of the shipment, the shipment is created and the order PNG string retrieved. This gets saved, along with the ordeID, to `FespMVC/NEW_API_SYSTEM/sp_api/api_labels.db3` ('prime_labels' table).
+
+If the 'prime_labels' equals/exceeds 6000, it deletes the oldest records, leaving 5000 remaining. The database also gets compacted when this happens.
 
 
 ## amazon_sp_api_get_orders.py
