@@ -35,7 +35,7 @@ Get weights & lengths, from `FespMVC/NEW_API_SYSTEM/sp_api/products.db3`, for sk
 
 After calculating the total dimensions and weight of the shipment, the shipment is created and the order PNG string retrieved. This gets saved, along with the ordeID, to `FespMVC/NEW_API_SYSTEM/sp_api/api_labels.db3` ('prime_labels' table).
 
-If the 'prime_labels' equals/exceeds 6000, it deletes the oldest records, leaving 5000 remaining. The database also gets compacted when this happens.
+If the total records in 'prime_labels' equals/exceeds 6000, it deletes the oldest records, leaving 5000 remaining. The database also gets compacted during this process.
 
 
 ## amazon_sp_api_get_orders.py
