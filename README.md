@@ -24,3 +24,5 @@ orderitemId
 sku
 qty
 ```
+
+Get weights & lengths, from `FespMVC/NEW_API_SYSTEM/sp_api/products.db3`, for skus retrieved from `amazon_items`. This `products.db3` database is copied from `FESP-REFACTOR/products.db3` (7pm scheduled copy).
