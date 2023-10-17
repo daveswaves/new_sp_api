@@ -10,7 +10,7 @@ The data from `sp_api/api_orders.db3` gets copied to `api_orders.db3` by `NEW_AP
 
 At 55 mins past the hour `/var/www/html/sp_api/get_amazon_label_NEW.py` runs. This script calculates which orders need Prime labels then creates order shipments and retrieves their labels.
 
-The crontab schedules can be viewed by SSHing into 'vova@192.168.0.125' and running `crontab -l`. Run `crontab -e` to edit schedules.
+The crontab schedules can be viewed by SSHing into 'vova@192.168.0.125' and running `crontab -l`. Alternatively, `crontab -e` to edit schedules.
 
 ### get_amazon_label_NEW.py
 
