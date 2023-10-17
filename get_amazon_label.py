@@ -9,7 +9,7 @@ $ ssh vova@192.168.0.125
 Password: Gardens1
 cd /var/www/html/sp_api/
 
-python3 get_amazon_label_NEW.py
+python3 get_amazon_label.py
 '''
 
 abspath = os.path.abspath(__file__)
@@ -28,7 +28,7 @@ from sp_api.api import MerchantFulfillment
 from sp_api.base import Marketplaces
 
 
-SCRIPT_NAME = 'get_amazon_label_NEW.py'
+SCRIPT_NAME = 'get_amazon_label.py'
 SERVER_PATH = os.path.abspath(sys.argv[0]).replace(SCRIPT_NAME, '')
 SP_API_KEYS_FILE = 'sp-api-keys.json'
 SP_API_KEYS_FILE_PATH = SERVER_PATH + 'json/' + SP_API_KEYS_FILE
