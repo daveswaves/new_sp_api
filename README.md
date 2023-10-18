@@ -45,7 +45,7 @@ The `sp_api` access details are retrieved from `json/sp-api-keys.json`.
 The `Orders()` sp_api.api method is used, in conjunction with the @throttle_retry()
 and @load_all_pages() decorators, to retrieve order and items data.
 
-Not all the data comes from Amazon. We use a lookup table - `skus_titles_var` (`FespMVC/NEW_API_SYSTEM/sp_api/lookup_variations_titles.db3`) - to retrieve the asin, title & variation for any given sku:
+Not all the data comes from Amazon. We use a lookup table - `skus_titles_var` (`FespMVC/NEW_API_SYSTEM/sp_api/lookup_variations_titles.db3`) - to retrieve the `asin`, `title` & `variation` for any given sku:
 ![Image of lookup table](img/lookup_variations_titles.png)
 
 The table currently contains over 12,700 records.
