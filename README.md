@@ -42,10 +42,24 @@ If the total records in 'prime_labels' equals/exceeds 6000, it deletes the oldes
 
 The `sp_api` access details are retrieved from `json/sp-api-keys.json`.
 
-The `Orders()` sp_api.api method is used, in conjunction with the throttle_retry
-and load_all_pages utilities, to retrieve order and items data.
+The `Orders()` sp_api.api method is used, in conjunction with the @throttle_retry()
+and @load_all_pages() decorators, to retrieve order and items data.
 
-The following tables in `sp_api/api_orders.db3` get updated:
+Not all the data comes from Amazon. We use a lookup table `FespMVC/NEW_API_SYSTEM/sp_api/lookup_variations_titles.db3` that has the following fields:
+```
+sku
+asin
+title
+variation
+ts
+```
+
+![Image of lookup table](img/lookup_variations_titles.png)
+
+The table currently contains over 12,700 records.
+
+
+The order data gets saved to `amazon_orders` and `amazon_items` (`sp_api/api_orders.db3`), but there are 6 tables in total that get updated:
 ```
 amazon_orders
 amazon_items
